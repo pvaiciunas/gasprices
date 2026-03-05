@@ -2,7 +2,7 @@ name: Daily Data Scrape
 
 on:
   schedule:
-    # This runs at 09:00 UTC every day (approx 4:00 AM EST)
+    # This runs at 09:00 UTC every day (approx 4:00 AM EST )
     - cron: '0 9 * * *'
   workflow_dispatch: # Allows you to run it manually for testing
 
