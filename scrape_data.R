@@ -15,14 +15,28 @@ df$Date <- as.character(df$Date)
 # 2. Connect to SQLite
 con <- dbConnect(RSQLite::SQLite(), "local_data.db")
 
-# 3. Write with explicit SQL types
-dbWriteTable(
-  conn = con, 
-  name = "daily_scrapes", 
-  value = df, 
-  append = TRUE,
-  field.types = c(Date = "TEXT", Regular = "REAL") # REAL is the SQL term for numeric/float
-)
+# 3. Check if the table "daily_scrapes" already exists
+if (!dbExistsTable(con, "daily_scrapes")) {
+  
+  # FIRST RUN: Create the table and define types
+  dbWriteTable(
+    conn = con, 
+    name = "daily_scrapes", 
+    value = df, 
+    field.types = c(Date = "TEXT", Regular = "REAL")
+  )
+  
+} else {
+  
+  # SUBSEQUENT RUNS: Just append the data
+  # The types are already locked in from the first run
+  dbWriteTable(
+    conn = con, 
+    name = "daily_scrapes", 
+    value = df, 
+    append = TRUE
+  )
+}
 
 dbDisconnect(con)
 
