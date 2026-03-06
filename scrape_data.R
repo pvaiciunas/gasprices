@@ -9,13 +9,21 @@ webpage <- read_html(url)
 tables <- html_table(html_nodes(webpage, "table"), fill = TRUE)
 
 # Access the first table in the list
-df <- data.frame(Date = Sys.Date(), b = tables[[1]][1,2])
-df[1,2] <- as.numeric(sub('.', '', df[1,2]))
+df <- data.frame("Date" = Sys.Date() - 1, "Regular" = as.double(sub('.', '', tables[[1]][1,2]$Regular)))
+df$Date <- as.character(df$Date)
 
-# 2. Connect to SQLite file in the same folder
-# 'local_data.db' will be stored in your GitHub repo
+# 2. Connect to SQLite
 con <- dbConnect(RSQLite::SQLite(), "local_data.db")
 
-# 3. Write data
-dbWriteTable(con, "daily_scrapes", df, append = TRUE)
+# 3. Write with explicit SQL types
+dbWriteTable(
+  conn = con, 
+  name = "daily_scrapes", 
+  value = df, 
+  append = TRUE,
+  field.types = c(Date = "TEXT", Regular = "REAL") # REAL is the SQL term for numeric/float
+)
+
 dbDisconnect(con)
+
+
