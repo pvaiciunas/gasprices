@@ -18,7 +18,7 @@ jobs:
 
       - name: Install packages
         run: |
-          Rscript -e 'install.packages(c("rvest", "DBI", "RSQLite"))'
+          Rscript -e 'install.packages(c("curl", "httr", "rvest", "DBI", "RSQLite"))'
 
       - name: Run R script
         run: Rscript scrape_data.R
