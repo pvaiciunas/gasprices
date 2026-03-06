@@ -26,8 +26,6 @@ jobs:
         with:
           packages: |
             any::rvest
-            any::httr
-            any::curl
             any::DBI
             any::RSQLite
 
