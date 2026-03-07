@@ -9,7 +9,7 @@ webpage <- read_html(url)
 tables <- html_table(html_nodes(webpage, "table"), fill = TRUE)
 
 # Access the first table in the list
-df <- data.frame("Date" = Sys.Date() - 1, "Regular" = as.double(sub('.', '', tables[[1]][1,2]$Regular)))
+df <- data.frame("Date" = Sys.Date(), "Regular" = as.double(sub('.', '', tables[[1]][1,2]$Regular)))
 df$Date <- as.character(df$Date)
 
 # 2. Connect to SQLite
