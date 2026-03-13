@@ -15,27 +15,17 @@ df$Date <- as.character(df$Date)
 # 2. Connect to SQLite
 con <- dbConnect(RSQLite::SQLite(), "local_data.db")
 
-# 3. Check if the table "daily_scrapes" already exists
-if (!dbExistsTable(con, "daily_scrapes")) {
-  
-  # FIRST RUN: Create the table and define types
-  dbWriteTable(
-    conn = con, 
-    name = "daily_scrapes", 
-    value = df, 
-    field.types = c(Date = "TEXT", Regular = "REAL")
-  )
-  
+# Only append if the Date doesn't already exist in the database
+existing_dates <- dbGetQuery(con, "SELECT Date FROM daily_scrapes")$Date
+
+# Filter 'df' to only include rows where Date is NOT in the database
+new_data <- df %>% filter(!(as.character(Date) %in% existing_dates))
+
+if (nrow(new_data) > 0) {
+  dbWriteTable(con, "daily_scrapes", new_data, append = TRUE)
+  message("Added new records.")
 } else {
-  
-  # SUBSEQUENT RUNS: Just append the data
-  # The types are already locked in from the first run
-  dbWriteTable(
-    conn = con, 
-    name = "daily_scrapes", 
-    value = df, 
-    append = TRUE
-  )
+  message("No new data to add today.")
 }
 
 dbDisconnect(con)
