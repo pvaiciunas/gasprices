@@ -28,6 +28,7 @@ jobs:
             any::rvest
             any::DBI
             any::RSQLite
+            any::dplyr
 
       - name: Run R script
         run: Rscript scrape_data.R
