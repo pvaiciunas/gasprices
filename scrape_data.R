@@ -1,6 +1,7 @@
 library(rvest)
 library(DBI)
 library(RSQLite)
+library(dplyr)
 
 url <- "https://gasprices.aaa.com/"
 webpage <- read_html(url)
